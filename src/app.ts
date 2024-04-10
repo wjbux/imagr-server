@@ -4,10 +4,10 @@ import * as cors from 'cors';
 import * as express from 'express';
 import { Request, Response } from 'express';
 import { FindOptionsOrderValue, Like } from 'typeorm';
-import { environment } from '../environments/environment';
 import { myDataSource } from './app-data-source';
 import { Album } from './entity/Album';
 import { Image } from './entity/Image';
+import { environment } from './environments/environment';
 
 const DEFAULT_RESULT_LIMIT: number = 50;
 
@@ -142,13 +142,29 @@ app.get('/albums/:id/images', async function (req: Request, res: Response) {
 		const query = req.query;
 		const sort = query.sort ? { dateCreated: query.sort as FindOptionsOrderValue } : {};
 		const search = query.search ? { name: Like(`%${query.search}%`) } : {};
-		const images = await myDataSource.getRepository(Image).find({
+		const images: Image[] = await myDataSource.getRepository(Image).find({
 			where: { album: { id: Number(req.params.id) }, ...search },
 			order: { ...sort },
 			take: Number(query.limit) || 10,
+			skip: Number(query.skip) || 0,
 		});
 
 		return res.send(images);
+	} catch (e) {
+		console.error(e);
+	}
+});
+
+// Count images by album ID
+app.get('/albums/:id/count', async function (req: Request, res: Response) {
+	try {
+		const query = req.query;
+		const search = query.search ? { name: Like(`%${query.search}%`) } : {};
+		const count: number = await myDataSource.getRepository(Image).count({
+			where: { album: { id: Number(req.params.id) }, ...search },
+		});
+
+		return res.send(`${count}`);
 	} catch (e) {
 		console.error(e);
 	}

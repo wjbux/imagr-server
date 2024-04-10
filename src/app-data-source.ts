@@ -1,7 +1,7 @@
 import { DataSource } from 'typeorm';
-import { environment } from '../environments/environment';
 import { Album } from './entity/Album';
 import { Image } from './entity/Image';
+import { environment } from './environments/environment';
 
 export const myDataSource = new DataSource({
 	...environment.database,
