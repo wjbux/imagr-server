@@ -9,9 +9,9 @@ export const environment = {
 	},
 	s3: {
 		region: 'eu-north-1',
-		accessKeyId: 'AKIA5FTZCSHMPY577TAH',
-		secretAccessKey: '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',
-		bucket: 'unitaskr-image-gallery',
+		accessKeyId: '',
+		secretAccessKey: '',
+		bucket: '',
 	},
 	cors: [{ origin: 'http://localhost:4200' }],
 };
