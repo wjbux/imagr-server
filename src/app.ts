@@ -142,11 +142,12 @@ app.get('/albums/:id/images', async function (req: Request, res: Response) {
 		const query = req.query;
 		const sort = query.sort ? { dateCreated: query.sort as FindOptionsOrderValue } : {};
 		const search = query.search ? { name: Like(`%${query.search}%`) } : {};
+
 		const images: Image[] = await myDataSource.getRepository(Image).find({
 			where: { album: { id: Number(req.params.id) }, ...search },
 			order: { ...sort },
-			take: Number(query.limit) || 10,
 			skip: Number(query.skip) || 0,
+			take: Number(query.take) || DEFAULT_RESULT_LIMIT,
 		});
 
 		return res.send(images);
